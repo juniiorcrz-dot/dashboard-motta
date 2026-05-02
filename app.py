@@ -10,6 +10,7 @@ arquivo = st.file_uploader("📂 Carregar Base Excel", type=["xlsx"])
 
 if arquivo:
     df = pd.read_excel(arquivo)
+    st.write(df.columns)
 
     # Normalizar nomes (caso venham diferentes)
     df.columns = df.columns.str.strip().str.lower()
