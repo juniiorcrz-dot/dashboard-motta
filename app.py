@@ -18,10 +18,25 @@ if arquivo:
     st.subheader("Indicadores")
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("Cabeças", int(df.get("cabecas", 0).sum()))
-    c2.metric("Peso Compra", round(df.get("peso_compra", pd.Series([0])).mean(), 1))
-    c3.metric("Peso Chegada", round(df.get("peso_chegada", pd.Series([0])).mean(), 1))
-    c4.metric("Peso Balancinha", round(df.get("peso_balancinha", pd.Series([0])).mean(), 1))
+    # Corrigir nomes de colunas
+df.columns = df.columns.str.strip().str.lower()
+
+# Funções seguras
+def safe_sum(df, col):
+    if col in df.columns:
+        return df[col].sum()
+    return 0
+
+def safe_mean(df, col):
+    if col in df.columns:
+        return df[col].mean()
+    return 0
+
+# KPIs
+c1.metric("Cabeças", int(safe_sum(df, "cabecas")))
+c2.metric("Peso Compra", round(safe_mean(df, "peso_compra"),1))
+c3.metric("Peso Chegada", round(safe_mean(df, "peso_chegada"),1))
+c4.metric("Peso Balancinha", round(safe_mean(df, "peso_balancinha"),1))
 
     # Cálculos (só se as colunas existirem)
     if all(col in df.columns for col in ["peso_compra","peso_chegada","km"]):
